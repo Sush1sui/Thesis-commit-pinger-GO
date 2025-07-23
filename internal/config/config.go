@@ -26,15 +26,36 @@ func New() (*Config, error) {
 		fmt.Println("Error loading .env file")
 	}
 
+	botToken := os.Getenv("bot_token")
+	if botToken == "" {
+		return nil, fmt.Errorf("bot_token is not set in the environment variables")
+	}
+
+	appID := os.Getenv("app_id")
+	if appID == "" {
+		return nil, fmt.Errorf("app_id is not set in the environment variables")
+	}
+
+	publicKey := os.Getenv("public_key")
+	if publicKey == "" {
+		return nil, fmt.Errorf("public_key is not set in the environment variables")
+	}
+
+	githubSecret := os.Getenv("github_secret")
+	if githubSecret == "" {
+		return nil, fmt.Errorf("github_secret is not set in the environment variables")
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "6924" // Default port if not set
 	}
+	
 	return &Config{
-		BotToken:     os.Getenv("bot_token"),
-		AppID:        os.Getenv("app_id"),
-		PublicKey:    os.Getenv("public_key"),
-		GithubSecret: os.Getenv("github_secret"),
+		BotToken:     botToken,
+		AppID:        appID,
+		PublicKey:    publicKey,
+		GithubSecret: githubSecret,
 		Port:         port,
 	}, nil
 }
