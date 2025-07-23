@@ -1,6 +1,6 @@
 module github.com/Sush1sui/thesis-bot-pinger-go
 
-go 1.24.5
+go 1.24.4
 
 require golang.org/x/net v0.42.0
 
