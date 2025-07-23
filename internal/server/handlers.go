@@ -49,12 +49,31 @@ func SendNotification(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received GitHub webhook request")
 
 	var payload Payload
-	body, err := io.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil || len(body) == 0 {
-		fmt.Println("Error reading request body:", err)
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
+    var body []byte
+    var err error
+
+	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
+		// Parse form and extract payload
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("Error parsing form:", err)
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
+			return
+		}
+		payloadStr := r.FormValue("payload")
+		if payloadStr == "" {
+			fmt.Println("No payload found in form")
+			http.Error(w, "No payload found", http.StatusBadRequest)
+			return
+		}
+		body = []byte(payloadStr)
+	} else {
+		body, err = io.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil || len(body) == 0 {
+			fmt.Println("Error reading request body:", err)
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			return
+		}
 	}
 
 	if err := json.Unmarshal(body, &payload); err != nil {
