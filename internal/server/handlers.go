@@ -91,7 +91,7 @@ func SendNotification(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Received webhook payload:", payload)
 
-	if payload.Ref == "refs/heads/main" || payload.Ref == "refs/heads/master" {
+	if payload.Ref == "refs/heads/main" || payload.Ref == "refs/heads/master" || payload.Ref == "refs/heads/frontend" {
 		commit := payload.HeadCommit
 		ogImage, err := getOpenGraphImage(commit.URL)
 		if err != nil {
