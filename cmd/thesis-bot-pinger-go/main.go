@@ -14,10 +14,11 @@ import (
 )
 
 func main() {
-	_, err := config.New()
+	cfg, err := config.New()
 	if err != nil {
 		fmt.Println("Error initializing configuration:", err)
 	} else {
+		config.GlobalConfig = cfg
 		fmt.Println("Configuration loaded successfully")
 	}
 
