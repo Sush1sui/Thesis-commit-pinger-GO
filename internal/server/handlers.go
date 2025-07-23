@@ -42,6 +42,7 @@ type Payload struct {
 }
 
 func SendNotification(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Send Notification called")
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
