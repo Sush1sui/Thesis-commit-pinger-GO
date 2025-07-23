@@ -31,6 +31,11 @@ type Commit struct {
 	} `json:"author"`
 }
 
+type Repository struct {
+	Name string `json:"name"`
+	FullName string `json:"full_name"`
+}
+
 type Sender struct {
 	AvatarURL string `json:"avatar_url"`
 }
@@ -39,6 +44,7 @@ type Payload struct {
 	Ref string `json:"ref"`
 	HeadCommit Commit `json:"head_commit"`
 	Sender Sender `json:"sender"`
+	Repository Repository `json:"repository"`
 }
 
 func SendNotification(w http.ResponseWriter, r *http.Request) {
@@ -50,8 +56,8 @@ func SendNotification(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received GitHub webhook request")
 
 	var payload Payload
-    var body []byte
-    var err error
+	var body []byte
+	var err error
 
 	if r.Header.Get("Content-Type") == "application/x-www-form-urlencoded" {
 		// Parse form and extract payload
@@ -94,9 +100,14 @@ func SendNotification(w http.ResponseWriter, r *http.Request) {
 		}
 
 		embed := &discordgo.MessageEmbed{
-			Title: fmt.Sprintf("New Commit by %s", commit.Author.Username),
+			Title: fmt.Sprintf("New Commit by %s on Repo: %s", commit.Author.Username, payload.Repository.Name),
 			Color: 0xFFFFFF,
 			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name: "Full Repository Name",
+					Value: payload.Repository.FullName,
+					Inline: true,
+				},
 				{
 					Name: "Author",
 					Value: commit.Author.Username,
