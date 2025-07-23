@@ -46,6 +46,11 @@ func New() (*Config, error) {
 		return nil, fmt.Errorf("github_secret is not set in the environment variables")
 	}
 
+	serverURL := os.Getenv("SERVER_URL")
+	if serverURL == "" {
+		return nil, fmt.Errorf("server_url is not set in the environment variables")
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "6924" // Default port if not set
@@ -56,6 +61,7 @@ func New() (*Config, error) {
 		AppID:        appID,
 		PublicKey:    publicKey,
 		GithubSecret: githubSecret,
+		ServerURL:    serverURL,
 		Port:         port,
 	}, nil
 }
