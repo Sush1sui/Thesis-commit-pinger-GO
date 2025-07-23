@@ -42,6 +42,12 @@ type Payload struct {
 }
 
 func SendNotification(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	fmt.Println("Received GitHub webhook request")
+
 	var payload Payload
 	body, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -126,6 +132,8 @@ func SendNotification(w http.ResponseWriter, r *http.Request) {
 				}
 			}()
 		}
+
+		fmt.Println("Notification sent successfully")
 	}
 }
 
